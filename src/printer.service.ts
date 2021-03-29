@@ -2,6 +2,7 @@ import {Injectable} from '@nestjs/common';
 
 const escpos = require('escpos');
 escpos.USB = require('escpos-usb');
+const path = require('path');
 
 @Injectable()
 export class PrinterService {
@@ -13,7 +14,8 @@ export class PrinterService {
     public async doMinion(): Promise<void> {
         const device = new escpos.USB();
         const printer = new escpos.Printer(device);
-        escpos.Image.load('https://data.whicdn.com/images/143462671/original.jpg', function (image) {
+        const image = path.join(__dirname, 'tux.png');
+        escpos.Image.load(image, function (image) {
             device.open(function () {
 
                 printer.align('ct')
