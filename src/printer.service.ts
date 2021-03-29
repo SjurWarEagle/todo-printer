@@ -12,17 +12,20 @@ export class PrinterService {
     }
 
     public async doMinion(): Promise<void> {
-        const device = new escpos.USB();
+        const device  = new escpos.USB();
         const printer = new escpos.Printer(device);
-        const image = path.join(__dirname, 'tux.png');
-        escpos.Image.load(image, function (image) {
-            device.open(function () {
+
+        const tux = path.join(__dirname, 'tux.png');
+        escpos.Image.load(tux, function(image){
+
+            device.open(function(){
 
                 printer.align('ct')
                     .image(image, 's8')
                     .then(() => {
                         printer.cut().close();
                     });
+
             });
         });
     }
