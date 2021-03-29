@@ -20,12 +20,13 @@ export class PrinterService {
 
     doPrint(text: String): void {
         console.log(`got "${text}" to print`);
-
-        printer
-            .font('a')
-            .align('ct')
-            // .style('bu')
-            .size(1, 1)
-            .text(text)
+        device.open(function (error) {
+            printer
+                .font('a')
+                .align('ct')
+                // .style('bu')
+                .size(1, 1)
+                .text(text)
+        });
     }
 }
