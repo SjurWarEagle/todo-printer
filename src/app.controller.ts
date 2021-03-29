@@ -10,8 +10,8 @@ export class AppController {
     await this.printerService.doPrint(text);
   }
 
-  @Get('printMinion')
-  public async getPrintMinion(): Promise<void> {
-    await this.printerService.doMinion();
-  }
+  // @Get('printMinion')
+  // public async getPrintMinion(): Promise<void> {
+  //   await this.printerService.doMinion();
+  // }
 }
