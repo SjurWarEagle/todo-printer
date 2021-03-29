@@ -18,8 +18,12 @@ export class PrinterService {
     constructor() {
     }
 
-    doPrint(text: String): void {
+    public doPrint(text: String): void {
         console.log(`got "${text}" to print`);
+
+        // encoding is optional
+        const printer = new escpos.Printer(device, options);
+
         device.open(function (error) {
             printer
                 .font('a')
