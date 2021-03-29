@@ -6,7 +6,7 @@ export class AppController {
   constructor(private readonly printerService: PrinterService) {}
 
   @Get('printText')
-  getPrintText(@Query('text')text:string): void {
-    this.printerService.doPrint(text);
+  public async getPrintText(@Query('text')text:string): Promise<void> {
+    await this.printerService.doPrint(text);
   }
 }

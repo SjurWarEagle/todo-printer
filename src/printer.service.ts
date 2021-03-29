@@ -4,13 +4,13 @@ const escpos = require('escpos');
 // install escpos-usb adapter module manually
 escpos.USB = require('escpos-usb');
 // Select the adapter based on your printer type
-const device = new escpos.USB();
+// const device = new escpos.USB();
 // const device  = new escpos.Network('localhost');
 // const device  = new escpos.Serial('/dev/usb/lp0');
 
 const options = {encoding: "GB18030" /* default */}
 // encoding is optional
-const printer = new escpos.Printer(device, options);
+// const printer = new escpos.Printer(device, options);
 
 @Injectable()
 export class PrinterService {
@@ -18,19 +18,14 @@ export class PrinterService {
     constructor() {
     }
 
-    public doPrint(text: String): void {
+    public async doPrint(text: String): Promise<void> {
         console.log(`got "${text}" to print`);
 
-        // encoding is optional
-        const printer = new escpos.Printer(device, options);
+        const device = await escpos.USB.getDevice();
+        const printer = await escpos.Printer.create(device);
 
-        device.open(function (error) {
-            printer
-                .font('a')
-                .align('ct')
-                // .style('bu')
-                .size(1, 1)
-                .text(text)
-        });
+        await printer.text(text);
+        await printer.cut();
+        await printer.close();
     }
 }
