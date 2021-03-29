@@ -15,7 +15,7 @@ export class PrinterService {
         const device  = new escpos.USB();
         const printer = new escpos.Printer(device);
 
-        const tux = path.join(__dirname, 'tux.png');
+        const tux = path.join(__dirname, '/src/tux.png');
         escpos.Image.load(tux, function(image){
 
             device.open(function(){
