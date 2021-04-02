@@ -8,7 +8,7 @@ export class AppController {
 
   @Get('printText')
   public async getPrintText(@Query('text')text:string): Promise<void> {
-    await this.printerService.doPrintText(text);
+    await this.printerService.doPrintText(text, true);
   }
 
   @Get('printToDo')
@@ -16,7 +16,7 @@ export class AppController {
     const todoText = await this.todoistService.getOneRandomTodo();
 
     await this.printerService.doMinion(false);
-    await this.printerService.doPrintText(todoText);
+    await this.printerService.doPrintText(todoText, true);
   }
 
   @Get('printMinion')

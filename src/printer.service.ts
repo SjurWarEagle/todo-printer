@@ -11,7 +11,7 @@ export class PrinterService {
     constructor() {
     }
 
-    public async doMinion(addCutGap: boolean): Promise<void> {
+    public async doMinion(lastPrintClosePrinter: boolean): Promise<void> {
 
         const url = 'https://minion.tkunkel.de/render?width=512&height=512&blackWhite=true';
         escpos.Image.load(url, function (image) {
@@ -25,19 +25,18 @@ export class PrinterService {
                     .image(image, 'd24')
                     // .align('ct')
                     .then(() => {
-                        if (addCutGap) {
+                        if (lastPrintClosePrinter) {
                             printer
-                                .cut();
+                                .cut()
+                                .close();
                         }
-                        printer
-                            .close();
                     });
 
             });
         });
     }
 
-    public async doPrintText(text: String): Promise<void> {
+    public async doPrintText(text: String, lastPrintClosePrinter:boolean): Promise<void> {
         console.log(`got "${text}" to print`);
 
         const device = await escpos.USB.getDevice();
@@ -45,7 +44,9 @@ export class PrinterService {
 
         // the first char is  missing, so adding a dummy char as "fix"
         await printer.text(this.DUMMY_CHAR_WHYEVER + text);
-        await printer.cut();
-        await printer.close();
+        if (lastPrintClosePrinter){
+            await printer.cut();
+            await printer.close();
+        }
     }
 }
