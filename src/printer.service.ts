@@ -14,26 +14,25 @@ export class PrinterService {
     public async doMinionWithText(text: string): Promise<void> {
 
         const url = 'https://minion.tkunkel.de/render?width=512&height=512&blackWhite=true';
-        escpos.Image.load(url, (image) => {
+        const image = await escpos.Image.load(url);
 
-            const device = new escpos.USB();
-            const printer = new escpos.Printer(device);
+        const device = new escpos.USB();
+        const printer = new escpos.Printer(device);
 
-            device.open(() => {
+        await device.open();
 
-                printer
-                    .image(image, 'd24')
-                    .text(this.DUMMY_CHAR_WHYEVER + text)
-                    // .align('ct')
-                    .then(() => {
-                        printer
-                            .cut()
-                            .close();
-                    });
+        await printer
+            .image(image, 'd24')
+        await printer
+            .text(this.DUMMY_CHAR_WHYEVER + text)
+        // .align('ct')
 
-            });
-        });
+        await printer
+            .cut()
+            .close();
+
     }
+
 
     public async doMinion(lastPrintClosePrinter: boolean): Promise<void> {
 
@@ -55,7 +54,6 @@ export class PrinterService {
                                 .close();
                         }
                     });
-
             });
         });
     }
