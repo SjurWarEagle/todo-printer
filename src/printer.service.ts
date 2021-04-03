@@ -14,7 +14,7 @@ export class PrinterService {
     public async doMinionWithText(text: string): Promise<void> {
 
         const url = 'https://minion.tkunkel.de/render?width=512&height=512&blackWhite=true';
-        escpos.Image.load(url,async (image) => {
+        escpos.Image.load(url, async (image) => {
 
             const device = new escpos.USB();
             const printer = new escpos.Printer(device);
@@ -37,12 +37,12 @@ export class PrinterService {
     public async doMinion(lastPrintClosePrinter: boolean): Promise<void> {
 
         const url = 'https://minion.tkunkel.de/render?width=512&height=512&blackWhite=true';
-        escpos.Image.load(url, (image) => {
+        await escpos.Image.load(url,async (image) => {
 
             const device = new escpos.USB();
             const printer = new escpos.Printer(device);
 
-            device.open(() => {
+            await device.open(() => {
 
                 printer
                     .image(image, 'd24')
