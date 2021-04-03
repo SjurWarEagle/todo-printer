@@ -35,9 +35,9 @@ export class PrinterService {
 
 
     public async doMinion(lastPrintClosePrinter: boolean): Promise<void> {
-
-        const url = 'https://minion.tkunkel.de/render?width=512&height=512&blackWhite=true';
-        await escpos.Image.load(url,  (image) => {
+const imgSize=400;
+        const url = `https://minion.tkunkel.de/render?width=${imgSize}&height=${imgSize}&blackWhite=true`;
+        escpos.Image.load(url, (image) => {
 
             const device = new escpos.USB();
             const printer = new escpos.Printer(device);
@@ -46,7 +46,6 @@ export class PrinterService {
 
                 printer
                     .image(image, 'd24')
-                    // .align('ct')
                     .then(() => {
                         printer
                             .cut()
