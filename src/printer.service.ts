@@ -19,13 +19,12 @@ export class PrinterService {
             const device = new escpos.USB();
             const printer = new escpos.Printer(device);
 
-            await device.open(async() => {
+            await device.open(async () => {
 
                 await printer
                     .image(image, 'd24')
-                await printer
-                    .text(this.DUMMY_CHAR_WHYEVER + text)
-                // .align('ct')
+                // await printer
+                //     .text(this.DUMMY_CHAR_WHYEVER + text)
 
                 await printer
                     .cut()
@@ -44,16 +43,22 @@ export class PrinterService {
             const printer = new escpos.Printer(device);
 
             device.open(() => {
-
                 printer
                     .image(image, 'd24')
-                    // .align('ct')
                     .then(() => {
-                        if (lastPrintClosePrinter) {
-                            printer
-                                .cut()
-                                .close();
-                        }
+                        printer
+                            .cut()
+                            .close().close().then(() => {
+                            device.open(() => {
+                                printer
+                                    .image(image, 'd24')
+                                    .then(() => {
+                                        printer
+                                            .cut()
+                                            .close();
+                                    });
+                            });
+                        })
                     });
             });
         });
