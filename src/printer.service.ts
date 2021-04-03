@@ -1,5 +1,6 @@
 import {Injectable} from '@nestjs/common';
 
+const options = { encoding: "CP860" };// Allows you to use Special Characters as Ç ã á and so on.
 const escpos = require('escpos');
 escpos.USB = require('escpos-usb');
 const path = require('path');
@@ -35,16 +36,17 @@ export class PrinterService {
 
 
     public async doMinion(lastPrintClosePrinter: boolean): Promise<void> {
-const imgSize=400;
+        const imgSize = 400;
         const url = `https://minion.tkunkel.de/render?width=${imgSize}&height=${imgSize}&blackWhite=true`;
         escpos.Image.load(url, (image) => {
 
             const device = new escpos.USB();
-            const printer = new escpos.Printer(device);
+            const printer = new escpos.Printer(device, options);
 
             device.open(() => {
 
                 printer
+                    .align('ct')
                     .image(image, 'd24')
                     .then(() => {
                         printer
