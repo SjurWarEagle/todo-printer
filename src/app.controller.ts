@@ -15,8 +15,7 @@ export class AppController {
   public async getPrintToDo(): Promise<void> {
     const todoText = await this.todoistService.getOneRandomTodo();
 
-    await this.printerService.doMinion(false);
-    await this.printerService.doPrintText(todoText, true);
+    await this.printerService.doMinionWithText(todoText);
   }
 
   @Get('printMinion')

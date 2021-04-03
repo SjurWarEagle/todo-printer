@@ -11,15 +11,39 @@ export class PrinterService {
     constructor() {
     }
 
-    public async doMinion(lastPrintClosePrinter: boolean): Promise<void> {
+    public async doMinionWithText(text: string): Promise<void> {
 
         const url = 'https://minion.tkunkel.de/render?width=512&height=512&blackWhite=true';
-        escpos.Image.load(url, function (image) {
+        escpos.Image.load(url, (image) => {
 
             const device = new escpos.USB();
             const printer = new escpos.Printer(device);
 
-            device.open(function () {
+            device.open(() => {
+
+                printer
+                    .image(image, 'd24')
+                    .text(this.DUMMY_CHAR_WHYEVER + text)
+                    // .align('ct')
+                    .then(() => {
+                        printer
+                            .cut()
+                            .close();
+                    });
+
+            });
+        });
+    }
+
+    public async doMinion(lastPrintClosePrinter: boolean): Promise<void> {
+
+        const url = 'https://minion.tkunkel.de/render?width=512&height=512&blackWhite=true';
+        escpos.Image.load(url, (image) => {
+
+            const device = new escpos.USB();
+            const printer = new escpos.Printer(device);
+
+            device.open(() => {
 
                 printer
                     .image(image, 'd24')
@@ -36,7 +60,7 @@ export class PrinterService {
         });
     }
 
-    public async doPrintText(text: String, lastPrintClosePrinter:boolean): Promise<void> {
+    public async doPrintText(text: String, lastPrintClosePrinter: boolean): Promise<void> {
         console.log(`got "${text}" to print`);
 
         const device = await escpos.USB.getDevice();
@@ -44,7 +68,7 @@ export class PrinterService {
 
         // the first char is  missing, so adding a dummy char as "fix"
         await printer.text(this.DUMMY_CHAR_WHYEVER + text);
-        if (lastPrintClosePrinter){
+        if (lastPrintClosePrinter) {
             await printer.cut();
             await printer.close();
         }
