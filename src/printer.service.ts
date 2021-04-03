@@ -14,23 +14,23 @@ export class PrinterService {
     public async doMinionWithText(text: string): Promise<void> {
 
         const url = 'https://minion.tkunkel.de/render?width=512&height=512&blackWhite=true';
-        const image = await escpos.Image.load(url);
+        escpos.Image.load(url,async (image) => {
 
-        const device = new escpos.USB();
-        const printer = new escpos.Printer(device);
+            const device = new escpos.USB();
+            const printer = new escpos.Printer(device);
 
-        await device.open();
+            await device.open();
 
-        await printer
-            .image(image, 'd24')
-        await printer
-            .text(this.DUMMY_CHAR_WHYEVER + text)
-        // .align('ct')
+            await printer
+                .image(image, 'd24')
+            await printer
+                .text(this.DUMMY_CHAR_WHYEVER + text)
+            // .align('ct')
 
-        await printer
-            .cut()
-            .close();
-
+            await printer
+                .cut()
+                .close();
+        });
     }
 
 
