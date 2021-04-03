@@ -37,23 +37,15 @@ export class PrinterService {
     public async doMinion(lastPrintClosePrinter: boolean): Promise<void> {
 
         const url = 'https://minion.tkunkel.de/render?width=512&height=512&blackWhite=true';
-        await escpos.Image.load(url,async (image) => {
+        await escpos.Image.load(url, async (image) => {
 
             const device = new escpos.USB();
             const printer = new escpos.Printer(device);
 
-            await device.open(() => {
+            await device.open(async () => {
 
-                printer
-                    .image(image, 'd24')
-                    // .align('ct')
-                    .then(() => {
-                        if (lastPrintClosePrinter) {
-                            printer
-                                .cut()
-                                .close();
-                        }
-                    });
+                await printer.image(image, 'd24')
+                await printer.cut().close();
             });
         });
     }
