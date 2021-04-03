@@ -45,14 +45,17 @@ export class PrinterService {
 
             device.open(() => {
 
-                printer
-                    .align('ct')
-                    .image(image, 'd24')
-                    .then(() => {
-                        printer
-                            .cut()
-                            .close();
-                    });
+                //printer.raster(image, "normal");
+                printer.text("text").raster(image).cut().close();
+
+                // printer
+                //     .align('ct')
+                //     .image(image, 'd24')
+                //     .then(() => {
+                //         printer
+                //             .cut()
+                //             .close();
+                //     });
             });
         });
     }
