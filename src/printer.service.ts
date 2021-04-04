@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 
-const options = { encoding: "CP860" };// Allows you to use Special Characters as Ç ã á and so on.
+const options = {encoding: "CP860"};// Allows you to use Special Characters as Ç ã á and so on.
 const escpos = require('escpos');
 escpos.USB = require('escpos-usb');
 const path = require('path');
@@ -15,22 +15,21 @@ export class PrinterService {
     public async doMinionWithText(text: string): Promise<void> {
 
         const url = 'https://minion.tkunkel.de/render?width=512&height=512&blackWhite=true';
-        escpos.Image.load(url, async (image) => {
+        escpos.Image.load(url, (image) => {
 
             const device = new escpos.USB();
             const printer = new escpos.Printer(device);
 
-            await device.open();
-
-            await printer
-                .image(image, 'd24')
-            await printer
-                .text(this.DUMMY_CHAR_WHYEVER + text)
-            // .align('ct')
-
-            await printer
-                .cut()
-                .close();
+            device.open(() => {
+                printer
+                    .text(this.DUMMY_CHAR_WHYEVER + text)
+                    .raster(image)
+                    .then(() => {
+                        printer
+                            .cut()
+                            .close();
+                    });
+            });
         });
     }
 
@@ -45,17 +44,14 @@ export class PrinterService {
 
             device.open(() => {
 
-                //printer.raster(image, "normal");
-                printer.text("text").raster(image).cut().close();
-
-                // printer
-                //     .align('ct')
-                //     .image(image, 'd24')
-                //     .then(() => {
-                //         printer
-                //             .cut()
-                //             .close();
-                //     });
+                printer
+                    .align('ct')
+                    .image(image, 'd24')
+                    .then(() => {
+                        printer
+                            .cut()
+                            .close();
+                    });
             });
         });
     }
